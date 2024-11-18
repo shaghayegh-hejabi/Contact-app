@@ -25,7 +25,6 @@ function Contacts() {
   const [selectedContacts, setSelectedContacts] = useState([]);
 
   useEffect(() => {
-    // برای نمایش تمام مخاطبین در ابتدا
     setFilteredUsers(contacts);
   }, [contacts]);
 
@@ -33,7 +32,7 @@ function Contacts() {
     const { name, value } = event.target;
     const updatedContact = { ...contact, [name]: value };
     setContact(updatedContact);
-    validate(updatedContact); // اعتبارسنجی هنگام تغییر
+    validate(updatedContact); 
   };
 
   const avatarHandler = (event) => {
@@ -49,7 +48,7 @@ function Contacts() {
       };
       reader.readAsDataURL(file);
     } else {
-      setContact((prev) => ({ ...prev, avatar: "" })); // حذف تصویر در صورت لغو انتخاب
+      setContact((prev) => ({ ...prev, avatar: "" })); 
     }
   };
 
@@ -112,24 +111,24 @@ function Contacts() {
     }, 2000);
   };
   const saveHandler = () => {
-    setHasSubmitted(true); // خطاها را نشان بده
-    const validationErrors = validate(contact); // اعتبارسنجی و دریافت خطاها
+    setHasSubmitted(true); 
+    const validationErrors = validate(contact); 
 
     if (Object.keys(validationErrors).length > 0) {
-      return; // اگر خطا وجود دارد، از ادامه جلوگیری کن
+      return;
     }
 
     if (editId) {
-      // به‌روزرسانی مخاطب موجود
+      
       setContacts((prevContacts) =>
         prevContacts.map((item) =>
           item.id === editId ? { ...contact, id: editId } : item
         )
       );
 
-      setEditId(null); // حالت ویرایش را غیرفعال می‌کنیم
+      setEditId(null); 
     } else {
-      // اضافه کردن مخاطب جدید
+      
       const newContact = { ...contact, id: v4() };
       setContacts((prevContacts) => [...prevContacts, newContact]);
     }
@@ -160,11 +159,11 @@ function Contacts() {
 
   const filterContacts = (searchTerm) => {
     if (!searchTerm.trim()) {
-      setFilteredUsers(contacts); // اگر جستجو خالی است، همه مخاطبین را نمایش دهید
+      setFilteredUsers(contacts); 
       return;
     }
     const filteredItems = contacts.filter((con) =>
-      [con.name, con.lastName, con.phone, con.email] // فقط این فیلدها جستجو شوند
+      [con.name, con.lastName, con.phone, con.email]
         .join(" ")
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
@@ -253,7 +252,7 @@ function Contacts() {
               />
               <div
                 className="text-red-500 text-sm mt-1"
-                style={{ minHeight: "1em" }} // فضای ثابت برای جلوگیری از جابجایی
+                style={{ minHeight: "1em" }} 
               >
                 {errors[input.name]}
               </div>
