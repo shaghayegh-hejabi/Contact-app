@@ -6,7 +6,7 @@ function ContactItem({
   return (
     <li
       key={id}
-      className="  text-base flex justify-around m-4  p-2 border-b-2 border-gray-600 "
+      className="  text-base flex justify-around m-4  p-2 border-b-2 border-gray-600 w-[430px] "
     >
       <div className="flex items-center">
         {avatar && (
@@ -24,7 +24,7 @@ function ContactItem({
         <p className="flex flex-col p-1">{phone}</p>
         <p>{email}</p>
       </div>
-      <div className="dropdown dropdown-end">
+      <div className="dropdown dropdown-end fixed flex translate-x-[165px]">
         <div tabIndex={0} role="button" className="m-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"

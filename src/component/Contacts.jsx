@@ -4,6 +4,7 @@ import { v4 } from "uuid";
 import Contactlist from "./Contactlist";
 import Search from "./Search";
 
+
 function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [contact, setContact] = useState({
@@ -21,6 +22,7 @@ function Contacts() {
   const [searchItem, setSearchItem] = useState("");
   const [editId, setEditId] = useState(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [selectedContacts, setSelectedContacts] = useState([]);
 
   useEffect(() => {
     // برای نمایش تمام مخاطبین در ابتدا
@@ -112,7 +114,6 @@ function Contacts() {
   const saveHandler = () => {
     setHasSubmitted(true); // خطاها را نشان بده
     const validationErrors = validate(contact); // اعتبارسنجی و دریافت خطاها
-    console.log("saveHandler ~ validationErrors", validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
       return; // اگر خطا وجود دارد، از ادامه جلوگیری کن
@@ -125,6 +126,7 @@ function Contacts() {
           item.id === editId ? { ...contact, id: editId } : item
         )
       );
+
       setEditId(null); // حالت ویرایش را غیرفعال می‌کنیم
     } else {
       // اضافه کردن مخاطب جدید
@@ -133,6 +135,15 @@ function Contacts() {
     }
     resetForm();
   };
+
+  const deleteSelectedContacts = ()=>{
+    setContacts((prevContacts) =>
+    prevContacts.filter((contact)=> !selectedContacts.includes(contact.id))
+    )
+    setSelectedContacts([])
+  }
+  
+
   const resetForm = () => {
     setContact({ name: "", lastName: "", phone: "", email: "", avatar: "" });
     setFileInputKey(Date.now());
@@ -172,6 +183,7 @@ function Contacts() {
   const deleteHandler = (id) => {
     const newContacts = contacts.filter((contact) => contact.id !== id);
     setContacts(newContacts);
+    
   };
   useEffect(() => {
     filterContacts(searchItem);
@@ -182,7 +194,8 @@ function Contacts() {
       {successMessage && (
         <div
           role="alert"
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 text-white p-5 rounded-lg z-50">
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 text-white p-5 rounded-lg z-50"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 shrink-0 stroke-current"
@@ -199,19 +212,24 @@ function Contacts() {
           {successMessage}
         </div>
       )}
-      <div className=" flex justify-end box-border mt-2">
-      <Contactlist
-        deleteHandler={deleteHandler}
-        editHandler={editHandler}
-        filteredUsers={filteredUsers}
-      />
-      <Search searchItem={searchItem} handleSearch={handleSearch} />
-
+      <div className=" flex justify-end box-border mt-2 translate-x-[150px]">
+        <Contactlist
+          selectedContacts={selectedContacts}
+          setSelectedContacts={setSelectedContacts}
+          deleteHandler={deleteHandler}
+          editHandler={editHandler}
+          filteredUsers={filteredUsers}
+        />
+        <div className="flex justify-between">
+        <button  className=" box-border  btn border-white m-0 mt-10 p-0" disabled={selectedContacts.length === 0} onClick={deleteSelectedContacts}>
+        Delete Selected
+        </button>
+        </div>
+        <Search searchItem={searchItem} handleSearch={handleSearch} />
       </div>
 
-      <div className="flex">
-        
-        <div className=" mt-10 text-white w-[600px] bg-[#121212] shadow-2xl rounded-lg p-5">
+      <div className="flex z-10 fixed justify-end translate-x-[800px] max-h-[600px] min-h-[550px]" >
+        <div className=" mt-10 translate-x-[80px] text-white w-[550px] bg-[#121212] shadow-2xl rounded-lg p-5">
           <input
             key={fileInputKey}
             className="file-input  w-full max-w-xs m-3"
@@ -241,44 +259,17 @@ function Contacts() {
               </div>
             </div>
           ))}
-          
-         
-          <div className=" box-border translate-x-[300px] translate-y-[-300px] font-sans flex flex-col bottom-[15rem] left-[21rem] font-light	max-w-64">
-            <div>
-              {contact.avatar && (
-                <img
-                  className="avatar  rounded-full  w-[90px] h-[90px]  "
-                  src={contact.avatar}
-                  alt="Preview"
-                />
-              )}
-            </div>
-            <div className="  flex  flex-row  mt-1 items-center p-2 ">
-              {contact.phone && <p>{contact.phone}</p>}
-            </div>
-            <div className="  flex  flex-row   items-center ">
-              {contact.name && (
-                <>
-                  <h1 className="p-2">{contact.name}</h1>
-                  <h1 className="p-2">{contact.lastName}</h1>
-                </>
-              )}
-            </div>
-          </div>
-               
 
           <button
-            className={`btn w-full mt-2 ${!isFormValid ? "btn-disabled" : "btn-secondary"}`}
+            className={`btn w-full mt-2 flex  ${!isFormValid ? "btn-disabled" : "btn-secondary"}`}
             disabled={!isFormValid}
             onClick={editId ? saveHandler : addHandler}
           >
             {editId ? "Save Changes" : "Add Contact"}
           </button>
+          
         </div>
       </div>
-
-      
-    
     </div>
   );
 }

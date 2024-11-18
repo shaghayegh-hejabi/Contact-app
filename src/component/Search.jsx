@@ -1,10 +1,10 @@
 function Search({ searchItem, handleSearch }) {
   return (
     <>
-      <label className="input input-bordered flex items-center translate-x-[-378px] translate-y-[35px] ">
+      <label className="input fixed input-bordered flex items-center translate-x-[-122px] translate-y-[35px]  ">
         <input
           type="text"
-          className="grow"
+          className="grow "
           placeholder="Search"
           value={searchItem}
           onChange={handleSearch}
@@ -21,6 +21,7 @@ function Search({ searchItem, handleSearch }) {
             clipRule="evenodd"
           />
         </svg>
+        
       </label>
     </>
   );
